@@ -1,4 +1,5 @@
-import { Component } from '@angular/core'
+import { NgOptimizedImage } from '@angular/common'
+import { Component, inject, ElementRef, ViewChild } from '@angular/core'
 import { 
   ReactiveFormsModule, 
   FormsModule,
@@ -7,12 +8,16 @@ import {
   Validators
 } from '@angular/forms'
 
+// SweetAlert2
+import Swal from 'sweetalert2'
+
+// Meta
 import { Meta } from '@angular/platform-browser'
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [ReactiveFormsModule, FormsModule, NgOptimizedImage],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -22,19 +27,28 @@ export class LoginComponent {
   loginForm!: FormGroup
   // สร้างตัวแปรไว้เช็คว่า submit form หรือยัง
   submitted = false
+  // สำหรับซ่อนแสดง password
+  hide = true
 
-  // ตัวแปรสำหรับผูกกับฟอร์ม
+  // ตัวแปรไว้เก็บค่า input ที่กรอก
   userLogin = {
     "email": "",
     "password": ""
   }
 
+  // สร้างตัวแปรไว้เก็บค่า input แรก
+  @ViewChild('emailInput') emailInput!: ElementRef
+
   // Constructor
-  constructor(
-    private formBuilder: FormBuilder,
-    private meta: Meta
-  ){
-  }
+  // constructor(
+  //   private formBuilder: FormBuilder,
+  //   private meta: Meta
+  // ){
+  // }
+
+  // ใช้ inject แทนการใช้ constructor
+  private formBuilder = inject(FormBuilder)
+  private meta = inject(Meta)
 
   // ngOnInit
   ngOnInit(){
@@ -44,6 +58,11 @@ export class LoginComponent {
     })
 
     this.meta.addTag({ name: 'description', content: 'Login page for Stock Management' })
+  }
+
+  // Method to toggle password visibility
+  togglePasswordVisibility() {
+    this.hide = !this.hide;
   }
 
   submitLogin(){
@@ -58,9 +77,21 @@ export class LoginComponent {
       this.userLogin.password = this.loginForm.value.password
 
       if(this.userLogin.email == "admin@email.com" && this.userLogin.password == "123456"){
-        alert("Login Success")
+        // alert("Login Success")
+        Swal.fire({
+          title: 'เข้าสู่ระบบสำเร็จ',
+          text: 'ยินดีต้อนรับเข้าสู่ระบบ Stock Management',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        })
       } else {
-        alert("Login Fail")
+        // alert("Login Fail")
+        Swal.fire({
+          title: 'มีข้อผิดพลาด',
+          text: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
       }
 
     }
@@ -69,6 +100,8 @@ export class LoginComponent {
   resetForm(){
     this.submitted = false
     this.loginForm.reset()
+    // ให้ focus ไปที่ input แรก
+    this.emailInput.nativeElement.focus()
   }
 
 }

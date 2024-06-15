@@ -17,6 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "statsJson": true,
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
+            ],
             "outputPath": "dist/ng17app-demo",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -27,11 +31,13 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/robots.txt"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.scss",
+              "node_modules/sweetalert2/src/sweetalert2.scss",
               "src/styles.scss"
             ],
             "scripts": [
@@ -40,16 +46,24 @@
           },
           "configurations": {
             "production": {
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 }
               ],
               "outputHashing": "all"
@@ -101,5 +115,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

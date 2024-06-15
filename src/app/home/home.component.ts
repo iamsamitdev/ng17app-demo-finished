@@ -1,10 +1,11 @@
+import { NgOptimizedImage } from '@angular/common'
 import { Component } from '@angular/core'
 import { Meta } from '@angular/platform-browser'
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [NgOptimizedImage],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
